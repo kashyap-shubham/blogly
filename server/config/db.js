@@ -1,0 +1,15 @@
+import mongoose from "mongoose";
+
+export const dbConnect = () => {
+   mongoose.connect(process.env.DB_URL)
+   .then(() => {
+    console.log("Db Connected Successfully");
+   })
+   .catch((error) => {
+    console.log(error.message);
+    console.log("Db Connection Failed! Closing the Server");
+    process.exit(1);
+   })
+}
+
+

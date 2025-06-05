@@ -1,27 +1,25 @@
 require("dotenv").config();
 import express from  "express";
-import mongoose from "mongoose";
+import { dbConnect } from "./config/db";
 
 const app = express();
 const port = env.process.PORT || 4000;
 
 app.use(express.json());
 
+app.use("/api/v1/user", userRouter);
+app.use("/ap1/v1/admin", adminRouter);
+app.use("/ap1/v1/blogs", blogRouter);
+
+
 
 const startServer = async () => {
-    
-    try {
-        const response = await mongoose.connect(process.env.DB_URL);
-        console.log("Db Connected successfully");
-        app.listen(port, () => {
-            console.log(`Server Started at port ${port}`)
-        })
-    } catch(error) {
-        console.log(error);
-        console.log("Db connection failed closing the server");
-        process.exit(1);
-    }
-}
+    dbConnect()
+    app.listen(port, () => {
+        console.log(`Server Started at port ${port}`);
+    })
+}    
+
 
 if (require.main === module) {
     startServer();

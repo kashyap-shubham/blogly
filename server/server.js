@@ -1,5 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
 import express from  "express";
 import { dbConnect } from "./config/db.js";
 
@@ -14,8 +12,8 @@ app.use("/ap1/v1/blogs", readBlog);
 
 
 
-const startServer = async () => {
-    await dbConnect()
+const startServer = () => {
+    dbConnect()
     app.listen(port, () => {
         console.log(`Server Started at port ${port}`);
     })

@@ -1,20 +1,21 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 import express from  "express";
-import { dbConnect } from "./config/db";
+import { dbConnect } from "./config/db.js";
 
 const app = express();
-const port = env.process.PORT || 4000;
+const port = process.env.PORT || 4000;
 
 app.use(express.json());
 
-app.use("/api/v1/user", userRouter);
-app.use("/ap1/v1/admin", adminRouter);
-app.use("/ap1/v1/blogs", blogRouter);
+app.use("/api/v1/user", userRoutes);
+app.use("/ap1/v1/admin", createBlog);
+app.use("/ap1/v1/blogs", readBlog);
 
 
 
 const startServer = async () => {
-    dbConnect()
+    await dbConnect()
     app.listen(port, () => {
         console.log(`Server Started at port ${port}`);
     })

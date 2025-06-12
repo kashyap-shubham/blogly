@@ -4,21 +4,41 @@ import { Schema } from "mongoose";
 const userSchema = new Schema({
     firstName: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     lastName: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     email: {
         type: String,
-        require: true,
-        unique: true
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true
     },
     password: {
         type: String,
-        require: true
-    }
-})
+        required: true
+    },
+    bio: {
+        type: String,
+        default: ""
+    },
+    avatar: {
+        type: String,
+        default: ""
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+},
+{
+    timestamps: true    
+}
+);
 
 export const User = mongoose.model("User", userSchema);

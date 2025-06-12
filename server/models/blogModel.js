@@ -10,6 +10,10 @@ const blogSchema = new Schema({
         type: String,
         required: true
     },
+    body: {
+        type: String,
+        required: true
+    },
     tags: {
         type: [String],
         default: []
@@ -21,7 +25,34 @@ const blogSchema = new Schema({
     },
     thumbnail: {
         type: String
-    }
-})
+    },
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        },
+    ],
+    commments: [
+        {
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: "User"
+            },
+            text: String,
+            createdAt: {
+                type: Date,
+                default: Date.now
+            },
+        },
+    ],
+    published: {
+        type: Boolean,
+        default: false
+    },
+},
+{
+    timestamps: true, //adds createAt and updateAt fields
+}
+);
 
 export const Blog = mongoose.model("Blog", blogSchema);

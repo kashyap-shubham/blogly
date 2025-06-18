@@ -30,7 +30,7 @@ export const signUp = async (req, res) => {
     } catch(error) {
         console.log(error);
         res.status(500).json({
-            message: "Error Singin Up, Please Try after some time"
+            message: "Error Singin Up, Please Try after some time."
         })
     }
 }
@@ -68,6 +68,9 @@ export const signIn = async (req, res) => {
         })
 
     } catch(error) {
-
+        console.log(error);
+        res.status(500).json({
+            message: "Error Login In, Please Try after some time."
+        })
     }
 }

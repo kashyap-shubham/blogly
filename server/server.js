@@ -1,5 +1,5 @@
 import express from  "express";
-import { dbConnect } from "./config/db.js";
+import { database } from "./config/db.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -12,8 +12,13 @@ app.use("/ap1/v1/blogs", readBlog);
 
 
 
-const startServer = () => {
-    dbConnect()
+const startServer = async () => {
+    await database.connect();
+    
+    if (!database.isConnected()) {
+       return; 
+    }
+
     app.listen(port, () => {
         console.log(`Server Started at port ${port}`);
     })

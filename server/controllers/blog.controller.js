@@ -30,3 +30,35 @@ export const getAllBlogs = async (req, res) => {
         });
     }
 }
+
+
+export const userBlogs = async (req, res) => {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const email = req.email;
+    const id = req._id;
+
+    try {
+        const blogs = await Blog.find($and || { email, id })
+        .sort({createdAt: -1})
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .populate("author", "name");
+
+        const total = await Blog.countDocuments( { published: true });
+
+        res.status(200).json({
+            message: "Successfull",
+            data: blogs,
+            totoalPages: Math.ceil(total / limit),
+            totalBlogs: total
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Error while fetching the Blogs"
+        });
+    }
+}

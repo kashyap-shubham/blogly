@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
+
+// functional approach
+
 // export const dbConnect = () => {
 //    mongoose.connect(process.env.DB_URL)
 //    .then(() => {
@@ -14,6 +17,9 @@ dotenv.config();
 //    })
 // }
 
+
+
+// Class based singleton approach
 class Database {
    #connectionString;
    #isConnected = false;

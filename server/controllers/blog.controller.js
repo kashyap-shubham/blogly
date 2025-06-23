@@ -37,10 +37,10 @@ export const userBlogs = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const email = req.email;
-    const id = req._id;
+    const userId = req._id;
 
     try {
-        const blogs = await Blog.find($and || { email, id })
+        const blogs = await Blog.find({ author: userId })
         .sort({createdAt: -1})
         .skip((page - 1) * limit)
         .limit(limit)

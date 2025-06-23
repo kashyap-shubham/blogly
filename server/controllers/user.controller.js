@@ -93,7 +93,7 @@ export const signIn = async (req, res, next) => {
 }
 
 
-export const logout = async (req, res) => {
+export const logOut = async (req, res) => {
     
     try {
         return res.status(200)
@@ -114,4 +114,12 @@ export const logout = async (req, res) => {
         })
     }
 } 
+
+
+export const postBlog = async (req, res) => {
+
+    // check if the user is authentic or not
+
+    // take out the blog contennt and save it to the blog document.
+}
 

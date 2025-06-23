@@ -6,7 +6,8 @@ export const userRouter = Router();
 
 userRouter.route("/signup").post(signUp);
 userRouter.route("/singin").post(signIn);
-userRouter.route("/logout").get(logout);
+userRouter.route("/logout").get(logOut);
+userRouter.route("/postblog").post(postBlog);
 
 
 

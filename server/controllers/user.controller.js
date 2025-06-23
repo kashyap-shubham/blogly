@@ -19,7 +19,8 @@ export const signUp = async (req, res) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            password: hashPassword
+            password: hashPassword,
+            bio: bio
         })
 
         res.status(201).json({

@@ -45,7 +45,7 @@ const userSchema = new Schema({
 
 
 userSchema.pre("save", async function(next) {
-    if (!this.isModified(password)) {
+    if (!this.isModified("password")) {
         return next();
     }
     this.password = await bcrypt.hash(this.password, 10);
@@ -54,23 +54,38 @@ userSchema.pre("save", async function(next) {
 
 
 userSchema.methods.isPasswordCorrect = async function(enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
+    try {
+        return await bcrypt.compare(enteredPassword, this.password);
+    } catch(error) {
+        console.log(error);
+        return "None";
+    }
 }
 
 
-userSchema.methods.generateToken = async () => {
+userSchema.methods.generateToken = async function() {
     const payload = {};
 
-    if (this._id) {
-        payload._id = this._id;
+    try {
+
+        if (this._id) {
+            payload._id = this._id;
+        }
+    
+        if (this.firstName) {
+            payload.firstName = this.firstName;
+        }
+    
+        if (this.email) {
+            payload.email = this.email;
+        }
+    
+        return jwt.sign(payload, process.env.USER_JWT, {expiresIn: '1d'});
+    
+    } catch(error) {
+        console.log(error)
+        return "None"
     }
-
-    if (this.userName) {
-        payload.userName = this.userName;
-    }
-
-    return jwt.sign(payload, process.env.USER_JWT, {expiresIn: '1d'});
-
 }
 
 

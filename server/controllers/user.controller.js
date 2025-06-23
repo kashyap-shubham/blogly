@@ -9,7 +9,7 @@ export const signUp = async (req, res) => {
 
         if (existingUser) {
             return res.status(400).json({
-                message: "User Already Exits"
+                message: "User Already Exists"
             })
         }
 
@@ -17,7 +17,7 @@ export const signUp = async (req, res) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            password: hashPassword,
+            password: password,
             bio: bio
         })
 
@@ -53,8 +53,8 @@ export const signIn = async (req, res, next) => {
         }
 
         const isMatch = await user.isPasswordCorrect(password);
-        if (!isMatch) {
-            return res.statu(400).json({
+        if (!isMatch || isMatch === "None") {
+            return res.status(400).json({
                 message: "Invalid Email or Password"
             })
         }
@@ -65,7 +65,10 @@ export const signIn = async (req, res, next) => {
             sameSite: "None"
         };
 
-        const token = user.generateToken();
+        const token = await user.generateToken();
+        if (token === "None") {
+            console.log("Error in generating token");
+        }
 
         res.status(200)
         .setHeader("Authorization", `Bearer ${token}`)
@@ -91,13 +94,15 @@ export const signIn = async (req, res, next) => {
 
 
 export const logout = async (req, res) => {
-    // expires token after 2 minutes
-   
+    
     try {
         return res.status(200)
-        .cookie("token", "none", {
-            expires: new Date(Date.now() + 1 * 1000),
-            htttpOnly: true
+        .cookie("token", "", {
+            // expires the token after 2 minutes of logout route hit
+            // expires: new Date(Date.now() + 2 * 60* 1000),
+            expires: new Date(0),
+            httpOnly: true,
+            secure: true
         })
         .json({
             message: "User Signed Out Successfully",

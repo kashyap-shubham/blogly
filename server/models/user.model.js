@@ -70,7 +70,7 @@ userSchema.methods.generateToken = async () => {
     }
 
     return jwt.sign(payload, process.env.USER_JWT, {expiresIn: '1d'});
-     
+
 }
 
 

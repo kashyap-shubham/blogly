@@ -13,8 +13,6 @@ export const signUp = async (req, res) => {
             })
         }
 
-        const hashPassword = await bcrypt.hash(password, 10);
-
         const userDetails = await User.create({
             firstName: firstName,
             lastName: lastName,
@@ -37,8 +35,14 @@ export const signUp = async (req, res) => {
 }
 
 
-export const signIn = async (req, res) => {
+export const signIn = async (req, res, next) => {
     const {email, password} = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({
+            message: "Please provide email and password"
+        })
+    }
     
     try{
         const user = await User.findOne({email});
@@ -48,16 +52,25 @@ export const signIn = async (req, res) => {
             })
         }
 
-        const isMatch = await bcryp.compare(password, user.password);
+        const isMatch = await user.isPasswordCorrect(password);
         if (!isMatch) {
             return res.statu(400).json({
                 message: "Invalid Email or Password"
             })
         }
 
-        const token = generateToken();
+        const option = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None"
+        };
 
-        res.status(200).json({
+        const token = user.generateToken();
+
+        res.status(200)
+        .setHeader("Authorization", `Bearer ${token}`)
+        .cookie("token", token, option)
+        .json({
             message: "Login Successful",
             user: {
                 id: user._id,

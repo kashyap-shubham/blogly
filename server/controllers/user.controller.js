@@ -88,3 +88,25 @@ export const signIn = async (req, res, next) => {
         })
     }
 }
+
+
+export const logout = async (req, res) => {
+    // expires token after 2 minutes
+   
+    try {
+        return res.status(200)
+        .cookie("token", "none", {
+            expires: new Date(Date.now() + 1 * 1000),
+            htttpOnly: true
+        })
+        .json({
+            message: "User Signed Out Successfully",
+        })
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Internal Server Error",
+        })
+    }
+} 
+

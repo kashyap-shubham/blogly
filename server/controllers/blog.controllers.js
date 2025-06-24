@@ -36,7 +36,6 @@ export const userBlogs = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const email = req.email;
     const userId = req._id;
 
     try {
@@ -61,4 +60,12 @@ export const userBlogs = async (req, res) => {
             message: "Error while fetching the Blogs"
         });
     }
+}
+
+
+export const postBlog = async (req, res) => {
+
+    // check if the user is authentic or not
+
+    // take out the blog contennt and save it to the blog document.
 }

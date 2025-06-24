@@ -116,10 +116,5 @@ export const logOut = async (req, res) => {
 } 
 
 
-export const postBlog = async (req, res) => {
 
-    // check if the user is authentic or not
-
-    // take out the blog contennt and save it to the blog document.
-}
 

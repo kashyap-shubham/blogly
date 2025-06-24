@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/apiErrors.js";
 
 
 export const signUp = async (req, res) => {
@@ -8,9 +9,7 @@ export const signUp = async (req, res) => {
         const existingUser = await User.findOne(({email}));
 
         if (existingUser) {
-            return res.status(400).json({
-                message: "User Already Exists"
-            })
+            throw new ApiError(400, "User Already Exists");
         }
 
         const userDetails = await User.create({
@@ -28,9 +27,7 @@ export const signUp = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        res.status(500).json({
-            message: "Error Singin Up, Please Try after some time."
-        })
+        throw new ApiError(500, "Error Sing In Up, Please Try after some time.");
     }
 }
 
@@ -39,17 +36,13 @@ export const signIn = async (req, res, next) => {
     const {email, password} = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({
-            message: "Please provide email and password"
-        })
+        throw new ApiError(400, "Please provide email and password");
     }
     
     try{
         const user = await User.findOne({email});
         if (!user) {
-            return res.status(400).json({
-                message: "Invalid Email or Password"
-            })
+            throw new ApiError(400, "Invalid Email or Password");
         }
 
         const isMatch = await user.isPasswordCorrect(password);

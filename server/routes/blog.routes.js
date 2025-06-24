@@ -5,7 +5,7 @@ import { getAllBlogs, postBlog, userBlogs } from "../controllers/blog.controller
 export const blogRouter = Router();
 
 blogRouter.route("/getallblogs").get(getAllBlogs);
-blogRouter.route("/userblogs").get(userAuth, userBlogs);
+blogRouter.route("/userblogs").get(userAuth,userBlogs);
 blogRouter.route("/postblogs").post(userAuth, postBlog);
 
 

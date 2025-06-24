@@ -3,6 +3,12 @@ import { database } from "./config/db.js";
 import { userRouter } from "./routes/user.routes.js";
 import { blogRouter } from "./routes/blog.routes.js";
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -26,6 +32,13 @@ const startServer = async () => {
 }    
 
 
-if (require.main === module) {
-    startServer();
+// if (require.main === module) {
+//     startServer();
+// }
+
+
+if (process.argv[1] === __filename) {
+  // This is the entry point
+  // Start your app here
+  startServer();
 }

@@ -32,7 +32,7 @@ class Database {
    }
    
    async connect() {
-      if (!this.#isConnected) {
+      if (this.#isConnected) {
          console.log("Already connected to the database");
          return;
       }
@@ -43,7 +43,7 @@ class Database {
          console.log("Database Connected Successfully");
 
       } catch(error) {
-         console.error("Databse connection failed: ", error.message);
+         console.error("Database connection failed: ", error.message);
          process.exit(1);
       }
    }

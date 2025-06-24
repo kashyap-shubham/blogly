@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { getAllBlogs, userBlogs } from "../controllers/blog.controllers.js";
+
 
 export const blogRouter = Router();
 

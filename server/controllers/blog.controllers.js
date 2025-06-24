@@ -1,4 +1,4 @@
-import { Blog } from "../models/blog.model"
+import { Blog } from "../models/blog.model.js"
 
 
 

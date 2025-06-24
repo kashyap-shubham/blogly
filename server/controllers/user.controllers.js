@@ -117,4 +117,6 @@ export const logOut = async (req, res) => {
 
 
 
-
+export const editProfile = async (req, res) => {
+    
+}

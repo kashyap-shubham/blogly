@@ -1,10 +1,12 @@
 import express from  "express";
+import cookieParser from "cookie-parser";
 import { database } from "./config/db.js";
 import { userRouter } from "./routes/user.routes.js";
 import { blogRouter } from "./routes/blog.routes.js";
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -12,10 +14,16 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 4000;
 
+
 app.use(express.json());
+app.use(cookieParser());
+
 
 app.use("/api/v1/user", userRouter);
 app.use("/ap1/v1/blogs", blogRouter);
+
+
+app.use(errorHandler);
 
 
 

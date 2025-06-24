@@ -1,8 +1,8 @@
 import express from  "express";
 import cookieParser from "cookie-parser";
-import { database } from "./config/db.js";
-import { userRouter } from "./routes/user.routes.js";
-import { blogRouter } from "./routes/blog.routes.js";
+import { database } from "./src/config/db.js";
+import { userRouter } from "./src/routes/user.routes.js";
+import { blogRouter } from "./src/routes/blog.routes.js";
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';

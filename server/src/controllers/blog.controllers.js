@@ -1,5 +1,5 @@
-import { isValidObjectId } from "mongoose";
-import { Blog } from "../models/blog.model.js"
+import { isValidObjectId } from "../utils/validateObjectId.js";
+import { Blog } from "../models/blog.model.js";
 import { ApiError } from "../utils/apiErrors.js";
 
 
@@ -132,7 +132,7 @@ export const updateBlog = async (req, res, next) => {
     }
 
     try {
-        const blog = await blog.findbyid(blogId);
+        const blog = await Blog.findbyid(blogId);
         if (!blog) {
             return next(new ApiError(404, "blog not found"));
         }
@@ -141,7 +141,7 @@ export const updateBlog = async (req, res, next) => {
             return next(new ApiError(403, "Unathorized to update the blog"));
         }
 
-        const updated = await blog.findbyidandupdate(blogId, req.body, {new: true});
+        const updated = await Blog.findByIdAndUpdate(blogId, req.body, {new: true});
 
         res.status(200).json({
             message: "blog updated successfully",

@@ -210,9 +210,32 @@ export const addComment = async (req, res) => {
             message: "Comment added Successfully",
             comments: blog.comments
         });
-        
+
     } catch(error) {
         console.log(error);
         throw new ApiError(500, "Error adding comment");
     }
 }
+
+
+export const getComments = async (req, res) => {
+    const blogId = req.params.id;
+
+    try {
+        const blog = await Blog.findById(blogId).populate("comments.user", "firstName lastName");
+        if (!blog) {
+            throw new ApiError(404, "Blog not found");
+        }
+        
+        res.status(200).json({
+            message: "Comments fetched successfully",
+            comments: blog.comments
+        });
+
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error fetching comments");
+    }
+}
+
+

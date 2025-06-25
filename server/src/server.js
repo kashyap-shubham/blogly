@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 
 app.use("/api/v1/user", userRouter);
-app.use("/ap1/v1/blogs", blogRouter);
+app.use("/api/v1/blogs", blogRouter);
 
 
 app.use(errorHandler);

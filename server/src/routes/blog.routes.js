@@ -15,9 +15,22 @@ import { userAuth } from "../middleware/userAuth.js";
 
 export const blogRouter = Router();
 
-blogRouter.route("/getallblogs").get(getAllBlogs);
-blogRouter.route("/userblogs").get(userAuth, userBlogs);
-blogRouter.route("/postblogs").post(userAuth, postBlog);
+blogRouter.route("/")
+    .get(getAllBlogs)
+    .post(userAuth, postBlog);
+
+blogRouter.route("/my")
+    .get(userAuth, userBlogs);
+
+blogRouter.route("/:id")
+    .get(getBlogById)
+    .put(userAuth, updateBlog)
+    .delete(userAuth, deleteBlog);
+
+
+blogRouter.post("/:id/like", userAuth, likeBlog);
+blogRouter.post("/:id/comment", userAuth, addComment);
+blogRouter.get("/:id/comments", getComments);
 
 
 

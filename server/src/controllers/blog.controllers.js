@@ -26,7 +26,7 @@ export const getAllBlogs = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error while Fetching the Blogs");
+        return next(new ApiError(500, "Error while Fetching the Blogs"));
     }
 }
 
@@ -55,7 +55,7 @@ export const userBlogs = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error whiel fetching the Blogs");
+        return next(new ApiError(500, "Error whiel fetching the Blogs"));
     }
 }
 
@@ -83,7 +83,7 @@ export const postBlog = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error Posting the blog");
+        return next(new ApiError(500, "Error Posting the blog"));
     }
 }
 
@@ -93,9 +93,9 @@ export const getBlogById = async (req, res) => {
     const blogId = req.params.id;
 
     try {
-        const blog = await Blog.findById(blgoId).populate("author", "firstName lastName email");
+        const blog = await Blog.findById(blogId).populate("author", "firstName lastName email");
         if (!blog) {
-            throw new ApiError(404, "Blog not found");
+            return next(new ApiError(404, "Blog not found"));
         }
 
         res.status(200).json({
@@ -105,7 +105,7 @@ export const getBlogById = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error Fetching blog");
+        return next(new ApiError(500, "Error Fetching blog"));
     }
 }
 
@@ -117,10 +117,10 @@ export const updateBlog = async (req, res) => {
     try {
         const blog = await Blog.findById(blogId);
         if (!blog) {
-            throw new ApiError(404, "Blog not found");
+            return next(new ApiError(404, "Blog not found"));
         }
 
-        const updated = await Blog.findAndUpdate(blogId, req.body, {new: true});
+        const updated = await Blog.findByIdAndUpdate(blogId, req.body, {new: true});
 
         res.status(200).json({
             message: "Blog updated successfully",
@@ -129,7 +129,7 @@ export const updateBlog = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error updating the blog");
+        return next(new ApiError(500, "Error updating the blog"));
     }
 }
 
@@ -141,11 +141,11 @@ export const deleteBlog = async (req, res) => {
     try {
         const blog = await Blog.findById(blogId);
         if (!blog) {
-            throw new ApiError(404, "Blog not found");
+            return next(new ApiError(404, "Blog not found"));
         }
 
         if (blog.author.toString() !== userId) {
-            throw new ApiError(403, "Unathorized to delete the blog");
+            return next(new ApiError(403, "Unathorized to delete the blog"));
         }
 
         await Blog.findByIdAndDelete(blogId);
@@ -156,7 +156,7 @@ export const deleteBlog = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error deleting Blog")
+        return next(new ApiError(500, "Error deleting Blog"));
     }
 }
 
@@ -168,17 +168,17 @@ export const likeBlog = async (req, res) => {
     try {
         const blog = await Blog.findById(blogId);
         if (!blog) {
-            throw new ApiError(404, "Blog not found");
+            return next(new ApiError(404, "Blog not found"));
         }
 
-        const alreadyLiked = blog.likes.include(userId);
+        const alreadyLiked = blog.likes.includes(userId.toString());
         if (alreadyLiked) {
             blog.likes.pull(userId);
         } else {
             blog.likes.push(userId);
         }
 
-        await Blog.save();
+        await blog.save();
         res.status(200).json({
             message: alreadyLiked ? "Unliked Blog" : "Liked Blog",
             likes: blog.likes.length
@@ -186,7 +186,7 @@ export const likeBlog = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error liking/unliking the blog");
+        return next(new ApiError(500, "Error liking/unliking the blog"));
     }
 }
 
@@ -198,9 +198,9 @@ export const addComment = async (req, res) => {
     const {text} = req.body;
 
     try {
-        const blog = await Blog.findById(blgoId);
+        const blog = await Blog.findById(blogId);
         if (!blog) {
-            throw new ApiError(404, "Blog not found");
+            return next(new ApiError(404, "Blog not found"));
         }
 
         blog.comments.push({user: userId, text});
@@ -213,7 +213,7 @@ export const addComment = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error adding comment");
+        return next(new ApiError(500, "Error adding comment"));
     }
 }
 
@@ -224,7 +224,7 @@ export const getComments = async (req, res) => {
     try {
         const blog = await Blog.findById(blogId).populate("comments.user", "firstName lastName");
         if (!blog) {
-            throw new ApiError(404, "Blog not found");
+            return next(new ApiError(404, "Blog not found"));
         }
         
         res.status(200).json({
@@ -234,7 +234,7 @@ export const getComments = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        throw new ApiError(500, "Error fetching comments");
+        return next(new ApiError(500, "Error fetching comments"));
     }
 }
 

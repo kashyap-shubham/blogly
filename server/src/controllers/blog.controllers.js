@@ -3,7 +3,7 @@ import { ApiError } from "../utils/apiErrors.js";
 
 
 
-export const getAllBlogs = async (req, res) => {
+export const getAllBlogs = async (req, res, next) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -13,7 +13,7 @@ export const getAllBlogs = async (req, res) => {
             .sort({createdAt: -1})
             .skip((page - 1 ) * limit)
             .limit(limit)
-            .populate("author", "name");
+            .populate("author", "firstName lastName");
 
         const total = await Blog.countDocuments({ published: true });
 
@@ -31,18 +31,18 @@ export const getAllBlogs = async (req, res) => {
 }
 
 
-export const userBlogs = async (req, res) => {
+export const userBlogs = async (req, res, next) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const userId = req._id;
+    const userId = req.user._id;
 
     try {
         const blogs = await Blog.find({ author: userId })
         .sort({createdAt: -1})
         .skip((page - 1) * limit)
         .limit(limit)
-        .populate("author", "name");
+        .populate("author", "firstName lastName");
 
         const total = await Blog.countDocuments( { published: true });
 
@@ -60,10 +60,10 @@ export const userBlogs = async (req, res) => {
 }
 
 
-export const postBlog = async (req, res) => {
+export const postBlog = async (req, res, next) => {
 
     const { title, description, body, tags, thumbnail, published } = req.body;
-    const userId = req._id;
+    const userId = req.user._id;
 
     try{
         const blog = await Blog.create({
@@ -88,7 +88,7 @@ export const postBlog = async (req, res) => {
 }
 
 
-export const getBlogById = async (req, res) => {
+export const getBlogById = async (req, res, next) => {
 
     const blogId = req.params.id;
 
@@ -110,33 +110,39 @@ export const getBlogById = async (req, res) => {
 }
 
 
-export const updateBlog = async (req, res) => {
+export const updateBlog = async (req, res, next) => {
     const blogId = req.params.id;
-    const userId = req._id;
+    const userId = req.user._id;
 
     try {
-        const blog = await Blog.findById(blogId);
+        const blog = await blog.findbyid(blogId);
         if (!blog) {
-            return next(new ApiError(404, "Blog not found"));
+            return next(new ApiError(404, "blog not found"));
         }
 
-        const updated = await Blog.findByIdAndUpdate(blogId, req.body, {new: true});
+        if (blog.author.toString() !== userId.toString()) {
+            return next(new ApiError(403, "Unathorized to update the blog"));
+        }
+
+        
+
+        const updated = await blog.findbyidandupdate(blogId, req.body, {new: true});
 
         res.status(200).json({
-            message: "Blog updated successfully",
+            message: "blog updated successfully",
             data: updated
         });
 
     } catch(error) {
         console.log(error);
-        return next(new ApiError(500, "Error updating the blog"));
+        return next(new ApiError(500, "error updating the blog"));
     }
 }
 
 
-export const deleteBlog = async (req, res) => {
+export const deleteBlog = async (req, res, next) => {
     const blogId = req.params.id;
-    const userId = req._id;
+    const userId = req.user._id;
 
     try {
         const blog = await Blog.findById(blogId);
@@ -144,7 +150,7 @@ export const deleteBlog = async (req, res) => {
             return next(new ApiError(404, "Blog not found"));
         }
 
-        if (blog.author.toString() !== userId) {
+        if (blog.author.toString() !== userId.toString()) {
             return next(new ApiError(403, "Unathorized to delete the blog"));
         }
 
@@ -161,9 +167,9 @@ export const deleteBlog = async (req, res) => {
 }
 
 
-export const likeBlog = async (req, res) => {
+export const likeBlog = async (req, res, next) => {
     const blogId = req.params.id;
-    const userId = req._id;
+    const userId = req.user._id;
 
     try {
         const blog = await Blog.findById(blogId);
@@ -191,9 +197,9 @@ export const likeBlog = async (req, res) => {
 }
 
 
-export const addComment = async (req, res) => {
+export const addComment = async (req, res, next) => {
     const blogId = req.params.id;
-    const userId = req._id;
+    const userId = req.user._id;
 
     const {text} = req.body;
 
@@ -218,7 +224,7 @@ export const addComment = async (req, res) => {
 }
 
 
-export const getComments = async (req, res) => {
+export const getComments = async (req, res, next) => {
     const blogId = req.params.id;
 
     try {

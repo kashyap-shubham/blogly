@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/apiErrors.js";
 
 
-export const signUp = async (req, res) => {
+export const signUp = async (req, res, next) => {
     const {firstName, lastName, email, password, bio } = req.body;
 
     try {
@@ -82,7 +82,7 @@ export const signIn = async (req, res, next) => {
 }
 
 
-export const logOut = async (req, res) => {
+export const logOut = async (req, res, next) => {
     
     try {
         return res.status(200)
@@ -91,7 +91,8 @@ export const logOut = async (req, res) => {
             // expires: new Date(Date.now() + 2 * 60* 1000),
             expires: new Date(0),
             httpOnly: true,
-            secure: true
+            secure: true,
+            sameSite: "None"
         })
         .json({
             message: "User Signed Out Successfully",
@@ -104,8 +105,8 @@ export const logOut = async (req, res) => {
 
 
 
-export const editProfile = async (req, res) => {
-    const userId = req._id;
+export const editProfile = async (req, res, next) => {
+    const userId = req.user._id;
     const {firstName, lastName, bio, avatar} = req.body;
 
     try {

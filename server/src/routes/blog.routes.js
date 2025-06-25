@@ -1,5 +1,15 @@
 import { Router } from "express";
-import { getAllBlogs, postBlog, userBlogs } from "../controllers/blog.controllers.js";
+import { 
+    getAllBlogs, 
+    postBlog, 
+    userBlogs,
+    getBlogById,
+    updateBlog,
+    deleteBlog,
+    likeBlog,
+    addComment,
+    getComments
+} from "../controllers/blog.controllers.js";
 import { userAuth } from "../middleware/userAuth.js";
 
 

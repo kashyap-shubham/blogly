@@ -105,5 +105,24 @@ export const logOut = async (req, res) => {
 
 
 export const editProfile = async (req, res) => {
-    
+    const userId = req._id;
+    const {firstName, lastName, bio, avatar} = req.body;
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+            firstName: firstName,
+            lastName: lastName,
+            bio: bio,
+            avatar: avatar
+        }, { new: true });
+        
+        res.status(200).json({
+            message: "Profile updated successfully",
+            user: updatedUser
+        });
+        
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error updating profile");
+    }
 }

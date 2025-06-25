@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import { Blog } from "../models/blog.model.js"
 import { ApiError } from "../utils/apiErrors.js";
 
@@ -37,6 +38,10 @@ export const userBlogs = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
     const userId = req.user._id;
 
+    if (!isValidObjectId(userId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
+
     try {
         const blogs = await Blog.find({ author: userId })
         .sort({createdAt: -1})
@@ -65,6 +70,10 @@ export const postBlog = async (req, res, next) => {
     const { title, description, body, tags, thumbnail, published } = req.body;
     const userId = req.user._id;
 
+    if (!isValidObjectId(userId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
+
     try{
         const blog = await Blog.create({
             title: title,
@@ -92,6 +101,10 @@ export const getBlogById = async (req, res, next) => {
 
     const blogId = req.params.id;
 
+    if (!isValidObjectId(blogId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
+
     try {
         const blog = await Blog.findById(blogId).populate("author", "firstName lastName email");
         if (!blog) {
@@ -114,6 +127,10 @@ export const updateBlog = async (req, res, next) => {
     const blogId = req.params.id;
     const userId = req.user._id;
 
+    if (!isValidObjectId(userId) && !isValidObjectId(blogId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
+
     try {
         const blog = await blog.findbyid(blogId);
         if (!blog) {
@@ -123,8 +140,6 @@ export const updateBlog = async (req, res, next) => {
         if (blog.author.toString() !== userId.toString()) {
             return next(new ApiError(403, "Unathorized to update the blog"));
         }
-
-        
 
         const updated = await blog.findbyidandupdate(blogId, req.body, {new: true});
 
@@ -143,6 +158,10 @@ export const updateBlog = async (req, res, next) => {
 export const deleteBlog = async (req, res, next) => {
     const blogId = req.params.id;
     const userId = req.user._id;
+
+    if (!isValidObjectId(userId) && !isValidObjectId(blogId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
 
     try {
         const blog = await Blog.findById(blogId);
@@ -170,6 +189,10 @@ export const deleteBlog = async (req, res, next) => {
 export const likeBlog = async (req, res, next) => {
     const blogId = req.params.id;
     const userId = req.user._id;
+
+    if (!isValidObjectId(userId) && !isValidObjectId(blogId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
 
     try {
         const blog = await Blog.findById(blogId);
@@ -201,6 +224,10 @@ export const addComment = async (req, res, next) => {
     const blogId = req.params.id;
     const userId = req.user._id;
 
+    if (!isValidObjectId(userId) && !isValidObjectId(blogId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
+
     const {text} = req.body;
 
     try {
@@ -226,6 +253,10 @@ export const addComment = async (req, res, next) => {
 
 export const getComments = async (req, res, next) => {
     const blogId = req.params.id;
+
+    if (!isValidObjectId(blogId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
 
     try {
         const blog = await Blog.findById(blogId).populate("comments.user", "firstName lastName");

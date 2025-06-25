@@ -109,6 +109,10 @@ export const editProfile = async (req, res, next) => {
     const userId = req.user._id;
     const {firstName, lastName, bio, avatar} = req.body;
 
+    if (!isValidObjectId(userId)) {
+        return next(new ApiError(400, "Invalid Id"));
+    }
+
     try {
         const updatedUser = await User.findByIdAndUpdate(userId, {
             firstName: firstName,

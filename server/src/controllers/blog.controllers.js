@@ -161,3 +161,33 @@ export const deleteBlog = async (req, res) => {
 }
 
 
+export const likeBlog = async (req, res) => {
+    const blogId = req.params.id;
+    const userId = req._id;
+
+    try {
+        const blog = await Blog.findById(blogId);
+        if (!blog) {
+            throw new ApiError(404, "Blog not found");
+        }
+
+        const alreadyLiked = blog.likes.include(userId);
+        if (alreadyLiked) {
+            blog.likes.pull(userId);
+        } else {
+            blog.likes.push(userId);
+        }
+
+        await Blog.save();
+        res.status(200).json({
+            message: alreadyLiked ? "Unliked Blog" : "Liked Blog",
+            likes: blog.likes.length
+        });
+
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error liking/unliking the blog");
+    }
+}
+
+

@@ -191,3 +191,28 @@ export const likeBlog = async (req, res) => {
 }
 
 
+export const addComment = async (req, res) => {
+    const blogId = req.params.id;
+    const userId = req._id;
+
+    const {text} = req.body;
+
+    try {
+        const blog = await Blog.findById(blgoId);
+        if (!blog) {
+            throw new ApiError(404, "Blog not found");
+        }
+
+        blog.comments.push({user: userId, text});
+        await blog.save();
+
+        res.status(200).json({
+            message: "Comment added Successfully",
+            comments: blog.comments
+        });
+        
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error adding comment");
+    }
+}

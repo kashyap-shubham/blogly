@@ -87,3 +87,77 @@ export const postBlog = async (req, res) => {
     }
 }
 
+
+export const getBlogById = async (req, res) => {
+
+    const blogId = req.params.id;
+
+    try {
+        const blog = await Blog.findById(blgoId).populate("author", "firstName lastName email");
+        if (!blog) {
+            throw new ApiError(404, "Blog not found");
+        }
+
+        res.status(200).json({
+            message: "Blog Fetched successfully",
+            data: blog
+        });
+
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error Fetching blog");
+    }
+}
+
+
+export const updateBlog = async (req, res) => {
+    const blogId = req.params.id;
+    const userId = req._id;
+
+    try {
+        const blog = await Blog.findById(blogId);
+        if (!blog) {
+            throw new ApiError(404, "Blog not found");
+        }
+
+        const updated = await Blog.findAndUpdate(blogId, req.body, {new: true});
+
+        res.status(200).json({
+            message: "Blog updated successfully",
+            data: updated
+        });
+
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error updating the blog");
+    }
+}
+
+
+export const deleteBlog = async (req, res) => {
+    const blogId = req.params.id;
+    const userId = req._id;
+
+    try {
+        const blog = await Blog.findById(blogId);
+        if (!blog) {
+            throw new ApiError(404, "Blog not found");
+        }
+
+        if (blog.author.toString() !== userId) {
+            throw new ApiError(403, "Unathorized to delete the blog");
+        }
+
+        await Blog.findByIdAndDelete(blogId);
+
+        res.status(200).json({
+            message: "Blog deleted successfully"
+        });
+
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error deleting Blog")
+    }
+}
+
+

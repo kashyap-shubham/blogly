@@ -11,25 +11,26 @@ import {
     getComments
 } from "../controllers/blog.controllers.js";
 import { userAuth } from "../middleware/userAuth.js";
+import { commentSchema, createBlogSchema, updateBlogSchema } from "../validator/blogSchema.js";
 
 
 export const blogRouter = Router();
 
 blogRouter.route("/")
     .get(getAllBlogs)
-    .post(userAuth, postBlog);
+    .post(userAuth, validate(createBlogSchema), postBlog);
 
 blogRouter.route("/my")
     .get(userAuth, userBlogs);
 
 blogRouter.route("/:id")
     .get(getBlogById)
-    .put(userAuth, updateBlog)
+    .put(userAuth, validate(updateBlogSchema), updateBlog)
     .delete(userAuth, deleteBlog);
 
 
 blogRouter.post("/:id/like", userAuth, likeBlog);
-blogRouter.post("/:id/comment", userAuth, addComment);
+blogRouter.post("/:id/comment", userAuth, validate(commentSchema), addComment);
 blogRouter.get("/:id/comments", getComments);
 
 

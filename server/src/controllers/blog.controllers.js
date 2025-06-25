@@ -132,7 +132,7 @@ export const updateBlog = async (req, res, next) => {
     }
 
     try {
-        const blog = await Blog.findbyid(blogId);
+        const blog = await Blog.findById(blogId);
         if (!blog) {
             return next(new ApiError(404, "blog not found"));
         }

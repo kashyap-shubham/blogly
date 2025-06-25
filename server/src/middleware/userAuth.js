@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export const userAuth = (req, res, next) => {
 
-    const authorization = req.headers["authorization"];
+    const authHeader = req.headers["authorization"];
 
     const token = req.cookies?.token 
         || (authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null)

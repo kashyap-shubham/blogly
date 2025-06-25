@@ -84,7 +84,7 @@ userSchema.methods.generateToken = async function() {
     
     } catch(error) {
         console.log(error)
-        return "None"
+        throw new Error("Token generation failed");
     }
 }
 

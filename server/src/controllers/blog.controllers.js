@@ -20,7 +20,7 @@ export const getAllBlogs = async (req, res) => {
         res.status(200).json({
             message: "Successfull",
             data: blogs,
-            totoalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(total / limit),
             totalBlogs: total
         });
 
@@ -49,7 +49,7 @@ export const userBlogs = async (req, res) => {
         res.status(200).json({
             message: "Successfull",
             data: blogs,
-            totoalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(total / limit),
             totalBlogs: total
         });
 
@@ -78,7 +78,7 @@ export const postBlog = async (req, res) => {
 
         res.status(201).json({
             message: "Blog posted successfully",
-            data: Blog
+            data: blog
         });
 
     } catch(error) {

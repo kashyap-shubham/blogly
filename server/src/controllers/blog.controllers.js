@@ -1,4 +1,5 @@
 import { Blog } from "../models/blog.model.js"
+import { ApiError } from "../utils/apiErrors.js";
 
 
 
@@ -25,9 +26,7 @@ export const getAllBlogs = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        res.status(500).json({
-            message: "Error While Fetching the Blogs"
-        });
+        throw new ApiError(500, "Error while Fetching the Blogs");
     }
 }
 
@@ -56,9 +55,7 @@ export const userBlogs = async (req, res) => {
 
     } catch(error) {
         console.log(error);
-        res.status(500).json({
-            message: "Error while fetching the Blogs"
-        });
+        throw new ApiError(500, "Error whiel fetching the Blogs");
     }
 }
 

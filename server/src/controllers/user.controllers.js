@@ -47,9 +47,7 @@ export const signIn = async (req, res, next) => {
 
         const isMatch = await user.isPasswordCorrect(password);
         if (!isMatch || isMatch === "None") {
-            return res.status(400).json({
-                message: "Invalid Email or Password"
-            })
+            throw new ApiError(400, "Invalid Email or Password");
         }
 
         const option = {
@@ -78,10 +76,8 @@ export const signIn = async (req, res, next) => {
         })
 
     } catch(error) {
-        console.log(error);
-        res.status(500).json({
-            message: "Error Login In, Please Try after some time."
-        })
+        console.log(error); 
+        throw new ApiError(500, "Error Login In, Please Try after some time.");
     }
 }
 
@@ -102,9 +98,7 @@ export const logOut = async (req, res) => {
         })
     } catch(error) {
         console.log(error);
-        res.status(500).json({
-            message: "Internal Server Error",
-        })
+        throw new ApiError(500, "Internal Server Error");
     }
 } 
 

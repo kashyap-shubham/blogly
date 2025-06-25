@@ -62,7 +62,28 @@ export const userBlogs = async (req, res) => {
 
 export const postBlog = async (req, res) => {
 
-    // check if the user is authentic or not
+    const { title, description, body, tags, thumbnail, published } = req.body;
+    const userId = req._id;
 
-    // take out the blog contennt and save it to the blog document.
+    try{
+        const blog = await Blog.create({
+            title: title,
+            description: description,
+            body: body,
+            tags: tags,
+            thumbnail: thumbnail,
+            author: userId,
+            published: published
+        })
+
+        res.status(201).json({
+            message: "Blog posted successfully",
+            data: Blog
+        });
+
+    } catch(error) {
+        console.log(error);
+        throw new ApiError(500, "Error Posting the blog");
+    }
 }
+

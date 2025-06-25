@@ -32,7 +32,7 @@ const blogSchema = new Schema({
             ref: "User"
         },
     ],
-    commments: [
+    comments: [
         {
             user: {
                 type: Schema.Types.ObjectId,

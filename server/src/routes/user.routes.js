@@ -7,6 +7,6 @@ export const userRouter = Router();
 userRouter.route("/signup").post(signUp);
 userRouter.route("/signin").post(signIn);
 userRouter.route("/logout").get(logOut);
-userRouter.route("/editprofile").get(editProfile);
+userRouter.route("/editprofile").put(editProfile);
 
 

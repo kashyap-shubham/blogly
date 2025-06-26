@@ -12,6 +12,7 @@ import {
 } from "../controllers/blog.controllers.js";
 import { userAuth } from "../middleware/userAuth.js";
 import { commentSchema, createBlogSchema, updateBlogSchema } from "../validator/blogSchema.js";
+import { validate } from "../middleware/validate.js";
 
 
 export const blogRouter = Router();

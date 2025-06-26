@@ -1,5 +1,4 @@
-const { z } = require("zod");
-
+import z from "zod";
 
 export const createBlogSchema = z.object({
   body: z.object({

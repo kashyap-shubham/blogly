@@ -2,6 +2,7 @@ import Router  from "express";
 import { editProfile, logOut, signIn, signUp } from "../controllers/user.controllers.js";
 import { userAuth } from "../middleware/userAuth.js";
 import { loginSchema, signupSchema, updateUserSchema } from "../validator/userSchema.js";
+import { validate } from "../middleware/validate.js";
 
 export const userRouter = Router();
 
